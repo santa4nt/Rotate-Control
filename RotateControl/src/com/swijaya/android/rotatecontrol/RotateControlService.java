@@ -76,12 +76,19 @@ public class RotateControlService extends Service implements SettingsContentObse
             Log.v(TAG, "Auto rotate is now " + (isAutoRotateEnabled ? "enabled" : "disabled"));
             mIsAutoRotateEnabled = isAutoRotateEnabled;
             // send a broadcast intent to tell widgets to redraw
-            // TODO
+            notifyWidget(mIsAutoRotateEnabled);
             // tell the user with a toast
             Toast.makeText(getApplicationContext(),
                     (mIsAutoRotateEnabled ? R.string.autorotate_on : R.string.autorotate_off),
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void notifyWidget(boolean isAutoRotateEnabled) {
+        Intent intent = new Intent(getApplicationContext(), RotateControlWidgetProvider.class);
+        intent.setAction(RotateControlWidgetProvider.ACTION_UPDATE_WITH_STATE);
+        intent.putExtra(RotateControlWidgetProvider.EXTRA_AUTOROTATE_ENABLED, isAutoRotateEnabled);
+        sendBroadcast(intent);
     }
 
     /**
