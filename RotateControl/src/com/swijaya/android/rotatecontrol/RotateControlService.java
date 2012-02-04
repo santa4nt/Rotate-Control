@@ -15,6 +15,7 @@ public class RotateControlService extends Service implements SettingsContentObse
 
     private RotateControl mRotateControl;
     private ContentObserver mSettingsContentObserver;
+    private boolean mIsAutoRotateEnabled;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -25,6 +26,7 @@ public class RotateControlService extends Service implements SettingsContentObse
     public void onCreate() {
         Log.v(TAG, "onCreate");
         mRotateControl = new RotateControl(getApplicationContext());
+        mIsAutoRotateEnabled = mRotateControl.isAutoRotateEnabled();
         observeSystemSettings();
     }
 
@@ -48,8 +50,13 @@ public class RotateControlService extends Service implements SettingsContentObse
      */
     public void onChange(boolean selfChange) {
         Log.v(TAG, "Registered settings change");
-        // send a broadcast intent to tell widgets to redraw
-        // TODO
+        boolean isAutoRotateEnabled = mRotateControl.isAutoRotateEnabled();
+        if (isAutoRotateEnabled != mIsAutoRotateEnabled) {
+            Log.v(TAG, "Auto rotate is now " + (isAutoRotateEnabled ? "enabled" : "disabled"));
+            mIsAutoRotateEnabled = isAutoRotateEnabled;
+            // send a broadcast intent to tell widgets to redraw
+            // TODO
+        }
     }
 
     /**
