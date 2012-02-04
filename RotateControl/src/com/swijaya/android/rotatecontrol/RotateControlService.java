@@ -58,7 +58,7 @@ public class RotateControlService extends Service implements SettingsContentObse
      * RotateControl's knowledge of the current state of the setting(s) it
      * is interested in.
      */
-    public void observeSystemSettings() {
+    private void observeSystemSettings() {
         // set up the content observer
         mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
 
@@ -72,7 +72,7 @@ public class RotateControlService extends Service implements SettingsContentObse
      * Unregister a content subscriber for the system settings that is
      * associated with the context supplied to this object.
      */
-    public void stopObserveSystemSettings() {
+    private void stopObserveSystemSettings() {
         if (mSettingsContentObserver != null) {
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
             contentResolver.unregisterContentObserver(mSettingsContentObserver);
