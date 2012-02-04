@@ -47,9 +47,11 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * associated with the context supplied to this object.
      */
     public synchronized void stopObserveSystemSettings() {
-        ContentResolver contentResolver = mContext.getContentResolver();
-        contentResolver.unregisterContentObserver(mSettingsContentObserver);
-        mSettingsContentObserver = null;
+        if (mSettingsContentObserver != null) {
+            ContentResolver contentResolver = mContext.getContentResolver();
+            contentResolver.unregisterContentObserver(mSettingsContentObserver);
+            mSettingsContentObserver = null;
+        }
     }
 
     /**
