@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 public class RotateControlService extends Service implements SettingsContentObserver.Delegate {
 
@@ -29,6 +30,7 @@ public class RotateControlService extends Service implements SettingsContentObse
     @Override
     public void onCreate() {
         Log.v(TAG, "onCreate");
+        Log.i(TAG, "Starting service");
         mRotateControl = new RotateControl(getApplicationContext());
         mIsAutoRotateEnabled = mRotateControl.isAutoRotateEnabled();
         observeSystemSettings();
@@ -42,7 +44,22 @@ public class RotateControlService extends Service implements SettingsContentObse
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(TAG, "onStartCommand:" + intent.getAction());
+        String action = intent.getAction();
+        Log.v(TAG, "onStartCommand:" + action);
+
+        if (action.equals(ACTION_ENABLE)) {
+            // do nothing; we've set things up in onCreate()
+        } else if (action.equals(ACTION_DISABLE)) {
+            Log.i(TAG, "Shutting down service");
+            stopSelf();
+        } else if (action.equals(ACTION_TOGGLE)) {
+            Log.i(TAG, "Toggling auto rotate");
+            Log.v(TAG, "Auto rotate setting is currently " + (mIsAutoRotateEnabled ? "enabled" : "disabled"));
+            mRotateControl.setAutoRotateEnabled(!mIsAutoRotateEnabled);
+        } else {
+            Log.wtf(TAG, "Unrecognized action: " + action);
+            assert (false);
+        }
 
         // if we get killed, after returning from here, restart
         return START_STICKY;
@@ -60,6 +77,10 @@ public class RotateControlService extends Service implements SettingsContentObse
             mIsAutoRotateEnabled = isAutoRotateEnabled;
             // send a broadcast intent to tell widgets to redraw
             // TODO
+            // tell the user with a toast
+            Toast.makeText(getApplicationContext(),
+                    (mIsAutoRotateEnabled ? R.string.autorotate_on : R.string.autorotate_off),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -70,9 +91,9 @@ public class RotateControlService extends Service implements SettingsContentObse
      * is interested in.
      */
     private void observeSystemSettings() {
+        Log.v(TAG, "observeSystemSettings");
         // set up the content observer
         mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
-
         // set it as Settings.System's content observer
         ContentResolver contentResolver = getApplicationContext().getContentResolver();
         contentResolver.registerContentObserver(Settings.System.CONTENT_URI,
@@ -85,6 +106,7 @@ public class RotateControlService extends Service implements SettingsContentObse
      */
     private void stopObserveSystemSettings() {
         if (mSettingsContentObserver != null) {
+            Log.v(TAG, "stopObserveSystemSettings");
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
             contentResolver.unregisterContentObserver(mSettingsContentObserver);
             mSettingsContentObserver = null;

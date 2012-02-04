@@ -3,7 +3,8 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="0"
-    android:initialLayout="@layout/widget"
-    android:configure="com.swijaya.android.rotatecontrol.RotateControlAppWidgetConfigure" >
+    android:initialLayout="@layout/widget" >
+    <!--
+    android:configure="com.swijaya.android.rotatecontrol.RotateControlAppWidgetConfigure" > -->
     
 </appwidget-provider>

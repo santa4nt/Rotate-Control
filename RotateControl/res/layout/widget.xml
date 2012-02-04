@@ -5,7 +5,7 @@
     android:padding="@dimen/widget_margin" >
     
     <ImageButton
-        android:id="@+id/widgetbutton"
+        android:id="@+id/widget_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
