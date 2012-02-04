@@ -13,6 +13,10 @@ public class RotateControlService extends Service implements SettingsContentObse
 
     private static final String TAG = RotateControlService.class.getSimpleName();
 
+    public static final String ACTION_ENABLE = TAG + ".ACTION_ENABLE";
+    public static final String ACTION_DISABLE = TAG + ".ACTION_DISABLE";
+    public static final String ACTION_TOGGLE = TAG + ".ACTION_TOGGLE";
+
     private RotateControl mRotateControl;
     private ContentObserver mSettingsContentObserver;
     private boolean mIsAutoRotateEnabled;
