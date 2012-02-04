@@ -14,12 +14,15 @@ public class RotateControl implements SettingsContentObserver.Delegate {
     private static final String TAG = RotateControl.class.getSimpleName();
 
     private final Context mContext;
+
     private ContentObserver mSettingsContentObserver;
-    private Boolean mIsAutoRotateEnabled;
+    private boolean mIsAutoRotateEnabled;
+    private boolean mIsDirty;
 
     public RotateControl(Context context) {
         mContext = context;
-
+        mIsAutoRotateEnabled = queryAutoRotateEnabled();
+        mIsDirty = false;
     }
 
     /**
@@ -28,12 +31,10 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * RotateControl's knowledge of the current state of the setting(s) it
      * is interested in.
      */
-    public void observeSystemSettings() {
+    public synchronized void observeSystemSettings() {
         // set up the content observer
-        synchronized (mIsAutoRotateEnabled) {
-            mIsAutoRotateEnabled = queryAutoRotateEnabled();
-            mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
-        }
+        mIsAutoRotateEnabled = queryAutoRotateEnabled();
+        mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
 
         // set it as Settings.System's content observer
         ContentResolver contentResolver = mContext.getContentResolver();
@@ -45,12 +46,10 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * Unregister a content subscriber for the system settings that is
      * associated with the context supplied to this object.
      */
-    public void stopObserveSystemSettings() {
+    public synchronized void stopObserveSystemSettings() {
         ContentResolver contentResolver = mContext.getContentResolver();
-        synchronized (mIsAutoRotateEnabled) {
-            contentResolver.unregisterContentObserver(mSettingsContentObserver);
-            mSettingsContentObserver = null;
-        }
+        contentResolver.unregisterContentObserver(mSettingsContentObserver);
+        mSettingsContentObserver = null;
     }
 
     /**
@@ -59,20 +58,19 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * @param enable whether to set auto-rotation
 
      */
-    public void setAutoRotateEnabled(boolean enable) {
+    public synchronized void setAutoRotateEnabled(boolean enable) {
         ContentResolver contentResolver = mContext.getContentResolver();
         String name = Settings.System.ACCELEROMETER_ROTATION;
         int value = enable ? 1 : 0;
         Settings.System.putInt(contentResolver, name, value);
+        mIsDirty = true;
     }
 
-    public boolean isAutoRotateEnabled() {
-        synchronized (mIsAutoRotateEnabled) {
-            if (mSettingsContentObserver == null) {
-                mIsAutoRotateEnabled = queryAutoRotateEnabled();
-            }
-            return mIsAutoRotateEnabled;
+    public synchronized boolean isAutoRotateEnabled() {
+        if (mIsDirty) {
+            mIsAutoRotateEnabled = queryAutoRotateEnabled();
         }
+        return mIsAutoRotateEnabled;
     }
 
     /**
@@ -93,10 +91,8 @@ public class RotateControl implements SettingsContentObserver.Delegate {
         return true;
     }
 
-    public void onChange(boolean selfChange) {
-        synchronized (mIsAutoRotateEnabled) {
-            mIsAutoRotateEnabled = queryAutoRotateEnabled();
-        }
+    public synchronized void onChange(boolean selfChange) {
+        mIsDirty = true;
     }
 
 }
