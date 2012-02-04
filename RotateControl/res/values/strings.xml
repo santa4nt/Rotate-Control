@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">RotateControl</string>
+    <string name="app_name">Rotate Control Widget</string>
     <string name="toggle_autorotate">Toggle auto rotate</string>
     <string name="autorotate_on">Auto rotate is on</string>
     <string name="autorotate_off">Auto rotate is off</string>
