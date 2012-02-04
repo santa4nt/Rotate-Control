@@ -16,6 +16,7 @@ public class RotateControl implements SettingsContentObserver.Delegate {
     private final Context mContext;
 
     private ContentObserver mSettingsContentObserver;
+    private SettingsContentObserver.Delegate mSecondaryDelegate;
     private boolean mIsAutoRotateEnabled;
     private boolean mIsDirty;
 
@@ -30,11 +31,15 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * content observer. This will automatically--and more effectively--update
      * RotateControl's knowledge of the current state of the setting(s) it
      * is interested in.
+     *
+     * @param secondaryDelegate if supplied, will be called back on every settings
+     *                          change event
      */
-    public synchronized void observeSystemSettings() {
+    public synchronized void observeSystemSettings(SettingsContentObserver.Delegate secondaryDelegate) {
         // set up the content observer
         mIsAutoRotateEnabled = queryAutoRotateEnabled();
         mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
+        mSecondaryDelegate = secondaryDelegate;
 
         // set it as Settings.System's content observer
         ContentResolver contentResolver = mContext.getContentResolver();
@@ -95,6 +100,7 @@ public class RotateControl implements SettingsContentObserver.Delegate {
 
     public synchronized void onChange(boolean selfChange) {
         mIsDirty = true;
+        mSecondaryDelegate.onChange(selfChange);
     }
 
 }

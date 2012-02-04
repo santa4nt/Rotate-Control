@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-public class RotateControlService extends Service {
+public class RotateControlService extends Service implements SettingsContentObserver.Delegate {
 
     private static final String TAG = RotateControlService.class.getSimpleName();
 
@@ -20,6 +20,7 @@ public class RotateControlService extends Service {
     public void onCreate() {
         Log.v(TAG, "onCreate");
         mRotateControl = new RotateControl(getApplicationContext());
+        mRotateControl.observeSystemSettings(this);
     }
 
     @Override
@@ -34,6 +35,12 @@ public class RotateControlService extends Service {
 
         // if we get killed, after returning from here, restart
         return START_STICKY;
+    }
+
+    public void onChange(boolean selfChange) {
+        Log.v(TAG, "Registered settings change");
+        // send a broadcast intent to tell widgets to redraw
+        // TODO
     }
 
 }
