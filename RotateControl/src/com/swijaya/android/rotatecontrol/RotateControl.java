@@ -2,61 +2,19 @@ package com.swijaya.android.rotatecontrol;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.ContentObserver;
-import android.os.Handler;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
 
 
-public class RotateControl implements SettingsContentObserver.Delegate {
+public class RotateControl {
 
     private static final String TAG = RotateControl.class.getSimpleName();
 
     private final Context mContext;
 
-    private ContentObserver mSettingsContentObserver;
-    private SettingsContentObserver.Delegate mSecondaryDelegate;
-    private boolean mIsAutoRotateEnabled;
-    private boolean mIsDirty;
-
     public RotateControl(Context context) {
         mContext = context;
-        mIsAutoRotateEnabled = queryAutoRotateEnabled();
-        mIsDirty = false;
-    }
-
-    /**
-     * Register the context supplied to this object as the system settings'
-     * content observer. This will automatically--and more effectively--update
-     * RotateControl's knowledge of the current state of the setting(s) it
-     * is interested in.
-     *
-     * @param secondaryDelegate if supplied, will be called back on every settings
-     *                          change event
-     */
-    public synchronized void observeSystemSettings(SettingsContentObserver.Delegate secondaryDelegate) {
-        // set up the content observer
-        mIsAutoRotateEnabled = queryAutoRotateEnabled();
-        mSettingsContentObserver = new SettingsContentObserver(new Handler(), this);
-        mSecondaryDelegate = secondaryDelegate;
-
-        // set it as Settings.System's content observer
-        ContentResolver contentResolver = mContext.getContentResolver();
-        contentResolver.registerContentObserver(Settings.System.CONTENT_URI,
-                true, mSettingsContentObserver);
-    }
-
-    /**
-     * Unregister a content subscriber for the system settings that is
-     * associated with the context supplied to this object.
-     */
-    public synchronized void stopObserveSystemSettings() {
-        if (mSettingsContentObserver != null) {
-            ContentResolver contentResolver = mContext.getContentResolver();
-            contentResolver.unregisterContentObserver(mSettingsContentObserver);
-            mSettingsContentObserver = null;
-        }
     }
 
     /**
@@ -65,27 +23,14 @@ public class RotateControl implements SettingsContentObserver.Delegate {
      * @param enable whether to set auto-rotation
 
      */
-    public synchronized void setAutoRotateEnabled(boolean enable) {
+    public void setAutoRotateEnabled(boolean enable) {
         ContentResolver contentResolver = mContext.getContentResolver();
         String name = Settings.System.ACCELEROMETER_ROTATION;
         int value = enable ? 1 : 0;
         Settings.System.putInt(contentResolver, name, value);
-        mIsDirty = true;
     }
 
-    public synchronized boolean isAutoRotateEnabled() {
-        if (mIsDirty) {
-            mIsAutoRotateEnabled = queryAutoRotateEnabled();
-        }
-        return mIsAutoRotateEnabled;
-    }
-
-    /**
-     * Query the system's auto-rotation setting.
-     * 
-     * @return whether auto-rotation is set
-     */
-    private boolean queryAutoRotateEnabled() {
+    public boolean isAutoRotateEnabled() {
         ContentResolver contentResolver = mContext.getContentResolver();
         String name = Settings.System.ACCELEROMETER_ROTATION;
         try {
@@ -96,11 +41,6 @@ public class RotateControl implements SettingsContentObserver.Delegate {
             assert (false);
         }
         return true;
-    }
-
-    public synchronized void onChange(boolean selfChange) {
-        mIsDirty = true;
-        mSecondaryDelegate.onChange(selfChange);
     }
 
 }
