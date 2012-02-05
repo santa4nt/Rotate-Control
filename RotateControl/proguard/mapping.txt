@@ -1,0 +1,35 @@
+com.swijaya.android.rotatecontrol.RotateControl -> com.swijaya.android.rotatecontrol.a:
+    java.lang.String TAG -> a
+    android.content.Context mContext -> b
+    boolean $assertionsDisabled -> c
+    void setAutoRotateEnabled(boolean) -> a
+    boolean isAutoRotateEnabled() -> a
+com.swijaya.android.rotatecontrol.RotateControlService -> com.swijaya.android.rotatecontrol.RotateControlService:
+    java.lang.String TAG -> d
+    java.lang.String ACTION_ENABLE -> a
+    java.lang.String ACTION_DISABLE -> b
+    java.lang.String ACTION_TOGGLE -> c
+    com.swijaya.android.rotatecontrol.RotateControl mRotateControl -> e
+    android.database.ContentObserver mSettingsContentObserver -> f
+    boolean mIsAutoRotateEnabled -> g
+    boolean $assertionsDisabled -> h
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    void onCreate() -> onCreate
+    void onDestroy() -> onDestroy
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    void onChange$1385ff() -> a
+com.swijaya.android.rotatecontrol.RotateControlWidgetProvider -> com.swijaya.android.rotatecontrol.RotateControlWidgetProvider:
+    java.lang.String TAG -> c
+    java.lang.String ACTION_UPDATE_WITH_STATE -> a
+    java.lang.String EXTRA_AUTOROTATE_ENABLED -> b
+    void onDisabled(android.content.Context) -> onDisabled
+    void onEnabled(android.content.Context) -> onEnabled
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    void onUpdate(android.content.Context,android.appwidget.AppWidgetManager,int[]) -> onUpdate
+    android.widget.RemoteViews createWidgetWithState(android.content.Context,boolean) -> a
+com.swijaya.android.rotatecontrol.SettingsContentObserver -> com.swijaya.android.rotatecontrol.c:
+    java.lang.String TAG -> a
+    com.swijaya.android.rotatecontrol.SettingsContentObserver$Delegate mDelegate -> b
+    void onChange(boolean) -> onChange
+com.swijaya.android.rotatecontrol.SettingsContentObserver$Delegate -> com.swijaya.android.rotatecontrol.b:
+    void onChange$1385ff() -> a
