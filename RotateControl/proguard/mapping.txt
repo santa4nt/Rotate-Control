@@ -18,6 +18,7 @@ com.swijaya.android.rotatecontrol.RotateControlService -> com.swijaya.android.ro
     void onDestroy() -> onDestroy
     int onStartCommand(android.content.Intent,int,int) -> onStartCommand
     void onChange$1385ff() -> a
+    void notifyWidget(boolean) -> a
 com.swijaya.android.rotatecontrol.RotateControlWidgetProvider -> com.swijaya.android.rotatecontrol.RotateControlWidgetProvider:
     java.lang.String TAG -> c
     java.lang.String ACTION_UPDATE_WITH_STATE -> a
