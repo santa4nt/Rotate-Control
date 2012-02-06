@@ -41,11 +41,12 @@ public class RotateControlWidgetProvider extends AppWidgetProvider {
         String action = intent.getAction();
         Log.v(TAG, "onReceive: " + action);
         if (action.equals(ACTION_UPDATE_WITH_STATE)) {
+            // we were sent an explicit intent to update this widget with a given state
             boolean isAutoRotateEnabled = intent.getBooleanExtra(EXTRA_AUTOROTATE_ENABLED, true);
             Log.v(TAG, "Updating widget with auto rotate state " +
                     (isAutoRotateEnabled ? "enabled" : "disabled"));
             RemoteViews views = createWidgetWithState(context, isAutoRotateEnabled);
-            // now, tell the manager to perform update
+            // now, tell the widget manager to perform update
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisWidget = new ComponentName(context, RotateControlWidgetProvider.class);
             appWidgetManager.updateAppWidget(thisWidget, views);

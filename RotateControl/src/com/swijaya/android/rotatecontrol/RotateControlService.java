@@ -33,6 +33,8 @@ public class RotateControlService extends Service implements SettingsContentObse
         Log.i(TAG, "Starting service");
         mRotateControl = new RotateControl(getApplicationContext());
         mIsAutoRotateEnabled = mRotateControl.isAutoRotateEnabled();
+        // just in case we started out-of-sync with the widget
+        notifyWidget(mIsAutoRotateEnabled);
         observeSystemSettings();
     }
 
@@ -53,8 +55,8 @@ public class RotateControlService extends Service implements SettingsContentObse
             Log.i(TAG, "Shutting down service");
             stopSelf();
         } else if (action.equals(ACTION_TOGGLE)) {
-            Log.i(TAG, "Toggling auto rotate");
             Log.v(TAG, "Auto rotate setting is currently " + (mIsAutoRotateEnabled ? "enabled" : "disabled"));
+            Log.i(TAG, "Toggling auto rotate");
             mRotateControl.setAutoRotateEnabled(!mIsAutoRotateEnabled);
         } else {
             Log.wtf(TAG, "Unrecognized action: " + action);
