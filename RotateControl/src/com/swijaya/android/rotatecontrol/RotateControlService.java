@@ -46,6 +46,15 @@ public class RotateControlService extends Service implements SettingsContentObse
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            // if our service gets killed for some reason, and the system restarts it,
+            // this callback will be provided a null intent
+            // see: http://developer.android.com/reference/android/app/Service.html#START_STICKY
+            Log.i(TAG, "onStartCommand: null intent");
+            // do nothing; the necessary setup has been done in onCreate()
+            return START_STICKY;
+        }
+
         String action = intent.getAction();
         Log.v(TAG, "onStartCommand:" + action);
 
