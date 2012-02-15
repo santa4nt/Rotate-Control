@@ -37,7 +37,7 @@ public class RotateControl {
             return Settings.System.getInt(contentResolver, name) == 1;
         }
         catch (SettingNotFoundException e) {
-            Log.wtf(TAG, e.getLocalizedMessage());
+            Log.e(TAG, e.getLocalizedMessage());
             assert (false);
         }
         return true;

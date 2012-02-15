@@ -68,7 +68,7 @@ public class RotateControlService extends Service implements SettingsContentObse
             Log.i(TAG, "Toggling auto rotate");
             mRotateControl.setAutoRotateEnabled(!mIsAutoRotateEnabled);
         } else {
-            Log.wtf(TAG, "Unrecognized action: " + action);
+            Log.e(TAG, "Unrecognized action: " + action);
             assert (false);
         }
 
